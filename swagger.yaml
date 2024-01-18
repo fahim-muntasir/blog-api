@@ -1,0 +1,1161 @@
+openapi: 3.0.1
+
+info:
+  title: Article post api project
+  description: This is a article site api project. User will be able to create article and comments.
+  termsOfService: http://example.com
+  contact:
+    name: Fahim muntasir
+    url: fahim.com
+    email: fahim@fahim.com
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:3000/api/v1
+    description: this is development server
+
+tags:
+  - name: Auth
+    description: Auth endpoint (public)
+  - name: Users
+    description: Users endpoint (public + private)
+  - name: Article
+    description: Article endpoint (public + private)
+  - name: Comment
+    description: Comment endpoint (public + private)
+
+
+paths:
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: This is auth endpoint
+      description: Each registard user will be able to signin by this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@example.com
+                password:
+                  type: string
+                  example: 123
+              required: [email, password]
+              
+      responses:
+        '200':
+          description: SignIn successfull
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      token: 
+                        type: string
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+        '400':
+          $ref: '#/components/responses/400'
+          
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /users:
+    get:
+      tags:
+        - Users
+      summary: This is get user endpoint
+      description: You can get all users by this endpoint. For this endpoint you need to pass some query data otherewise you will get default response.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: number
+            example: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: number
+            example: 10
+            default: 10
+        - in: query
+          name: sortType
+          schema: 
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [updatedAt, name]
+            default: updatedAt
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Users'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /api/v1/users
+                      nextPage:
+                        type: string
+                        example: /api/v1/users?page=3
+                      prevPage:
+                        type: string
+                        example: /api/v1/users?page=1
+                      articles:
+                        type: string
+                        example: /api/v1/atricles
+                    required: [self]
+        '404':
+          $ref: '#/components/responses/404'
+                  
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is create user endpoint
+      description: You cate create users by this endpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: fahim
+                email:
+                  type: string
+                  example: example@example.com
+                password:
+                  type: string
+                  example: 123
+                role:
+                  type: string
+                  enum: [admin, user]
+      
+      responses:
+        '201':
+          description: User create successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: '#/components/schemas/Users'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+        
+        '400':
+          $ref: '#/components/responses/400'
+          
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /users/:{id}:
+    get:
+      tags:
+        - Users
+      summary: Get a single user
+      description: You can get a single user by user id
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      responses:
+        '200':
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Users'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/users/1'
+                required: [code, data, links]
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is updated user endpoint
+      description: You can update a single user by user id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User Id
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: fahim
+                email:
+                  type: string
+                  example: example@example.com
+      responses:
+        '200':
+          description: User updated successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Users'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users/1
+          
+        '400':
+          $ref: '#/components/responses/400'
+          
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is delete user endpoint
+      description: You can delete user by user id
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Users'
+                required: [code, data]
+                
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '404':
+          $ref: '#/components/responses/404'
+          
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /articles:
+    get:
+      tags:
+        - Article
+      summary: This is get article endpoint
+      description: You can get all articles by this endpoint. For this endpoint you need to pass some query data otherewise you will get default response.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 2
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+            default: 10
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [updatedAt, title]
+            default: updatedAt
+        - name: search
+          in: query
+          schema:
+            type: string
+            
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /articles
+                      nextPage:
+                        type: string
+                        example: /articles?page=2
+                      prevPage:
+                        type: string
+                        example: /articles?page=1
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Article
+      summary: This is create article endpoint
+      description: You can create an article by this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: article title
+                body:
+                  type: string
+                  example: article body
+                userId: 
+                  type: integer
+                  example: 1
+                avatar: 
+                  type: string
+                  example: https://avatar.com/avatar
+                status:
+                  type: string
+                  example: pending
+                  default: pending
+              required: [title, body, userId]
+              
+      responses:
+        '201':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: '#/components/schemas/Article'
+                  links:
+                    type: object
+                    properties:
+                      self: 
+                        type: string
+                        example: /articles/1
+                      author:
+                        type: string
+                        example: /users/1
+                      comments: 
+                        type: string
+                        example: /articles/1/comments
+                    required: [self, author, comments]
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /articles/:{id}:
+    get:
+      tags:
+        - Article
+      summary: This is single get article endpoint
+      description: You can get a single article by this endpoint
+      parameters:
+        - name: id
+          in: path
+          description: Article id
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Article'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /articles/1
+                      author:
+                        type: string
+                        example: /users/1
+                      comments:
+                        type: string
+                        example: /articles/1/comments
+        '404':
+          $ref: '#/components/responses/404'
+          
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Article
+      summary: This is article update endpoint
+      description: You can update an article by this endpoint
+      parameters:
+        - name: id
+          in: path
+          description: Article id
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: article title
+                body:
+                  type: string
+                  example: article body
+                status:
+                  type: string
+                  example: pending
+                avatar: 
+                  type: string
+                  example: http://avatar.com/avatar
+            
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: integer
+                    example: 200
+                  body:
+                    $ref: '#/components/schemas/Article'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /articles/1
+                      author:
+                        type: string
+                        example: /users/1
+                      comments: 
+                        type: string
+                        example: /articles/1/comments
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Article
+      summary: This is article delete endpoint
+      description: You can delete a single article by article id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Article'
+        
+        '401': 
+          $ref: '#/components/responses/401'
+          
+        '404': 
+          $ref: '#/components/responses/404'
+          
+        '500': 
+          $ref: '#/components/responses/500'
+          
+  /articles/:{id}/comments:
+    get:
+      tags:
+        - Article
+      summary: This is all comments of a single article endpoint
+      description: You can get all comments by a single article id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Comment'
+                  patination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /articles/1/comments
+                      nextPage:
+                        type: string
+                        example: /articles/1/comments?page=3
+                      prevPage:
+                        type: string
+                        example: /articles/1/comments?page=1
+                      article:
+                        type: string
+                        example: /articles/1
+                        
+        '404':
+          $ref: '#/components/responses/404'
+          
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /comments:
+    get:
+      tags:
+        - Comment
+      summary: This is all commments get endpoint
+      description: You can get all comments by this endpoint and you can pass query for pagination
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 2
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
+        - in: query
+          name: sortType
+          schema:
+            type: string
+            default: desc
+            enum: [desc, asc]
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [updatedAt, text]
+            default: updatedAt
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [active, pending, draft]
+            default: active
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: fahim author
+            
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        example: /comments
+                      nextPage:
+                        type: string
+                        example: /comments?page=2
+                      prevPage:
+                        type: string
+                        example: /comments?page=1
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      summary: This is comment create endpoint
+      description: You can create a single comment by this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: awesome article
+                author:
+                  type: integer
+                  example: 1
+                article:
+                  type: integer
+                  example: 1
+                status:
+                  type: string
+                  default: pending
+              required: [text,author,article]
+      responses:
+        '201':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: '#/components/schemas/Comment'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /comments/1
+                      author:
+                        type: string
+                        example: /users/1
+                      article:
+                        type: string
+                        example: /articles/1
+                        
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /comments/:{id}:
+    get:
+      tags:
+        - Comment
+      summary: This is a single comment get endpoint
+      description: You can get a single comment by id
+      parameters:
+        - name: id
+          in: path
+          description: Comment Id
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Comment'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /comments/1
+                      author:
+                        type: string
+                        example: /users/1
+                      article:
+                        type: string
+                        example: /articles/1
+        
+        '404':
+          $ref: '#/components/responses/404'
+          
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      summary: This is comment update endpoint
+      description: You can update a single comment by id
+      parameters:
+        - name: id
+          in: path
+          description: Comment id
+          required: true
+          schema:
+            type: integer
+            example: 1
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                test:
+                  type: string
+                  example: comment text
+                status:
+                  type: string
+                  example: pending
+      
+      responses:
+        '200':
+          description: success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Comment'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /comments/1
+                      author:
+                        type: string
+                        example: /users/1
+                      article:
+                        type: string
+                        example: /articles/1
+                        
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comment
+      summary: This is comment delete endpoint
+      description: You can delete a comment by id
+      parameters:
+        - name: id
+          in: path
+          description: Comment Id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: '#/components/schemas/Comment'
+        '401': 
+          $ref: '#/components/responses/401'
+          
+        '404': 
+          $ref: '#/components/responses/404'
+          
+        '500': 
+          $ref: '#/components/responses/500'
+            
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: fahim
+        email:
+          type: string
+          example: example@example.com
+        role:
+          type: string
+          example: user
+        updatedAt:
+          type: string
+          example: '2023-01-15T12:30:00'
+        createdAt:
+          type: string
+          example: '2023-01-15T12:30:00'
+      required: [id, name, email, role, updatedAt, createdAt]
+      
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: article title
+        avatar:
+          type: string
+          example: https://avatar.com/avatar
+        status:
+          type: string
+          example: pending
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: fahim
+            email:
+              type: string
+              example: example@example.com
+          required: [id, name, email]
+        updatedAt:
+          type: string
+          example: '2023-01-15T12:30:00'
+        createdAt: 
+          type: string
+          example: '2023-01-15T12:30:00'
+      required: [id, title, status, author, updatedAt, createdAt]
+      
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 2
+        limit:
+          type: integer
+          example: 10
+        nextPage:
+          type: integer
+          example: 3
+        prevPage:
+          type: integer
+          example: 1
+        totalPage:
+          type: integer
+          example: 5
+        totalItem:
+          type: integer
+          example: 100
+      required: [page, limit, totalPage, totalItem]
+      
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        text:
+          type: string
+          example: hello world
+        status:
+          type: string
+          example: active
+        author:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: fahim
+            email:
+              type: string
+              example: example@example.com
+        updatedAt:
+          type: string
+          example: '2023-01-15T12:30:00'
+        createdAt:
+          type: string
+          example: '2023-01-15T12:30:00'
+      
+  responses:
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 400
+              error:
+                type: string
+                example: Bad request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+                    
+            required: [code, error]
+    
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              error:
+                type: string
+                example: Unauthorized, please signin and try again
+            required: [code, error]
+    
+    '404':
+      description: Not found data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: Not found
+            required: [code, error]
+            
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 500
+              error:
+                type: string
+                example: Server error
+            required: [code, error]
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+  
