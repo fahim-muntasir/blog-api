@@ -17,6 +17,22 @@ const transfromData = ({ items = [], selection = [], path = "/" }) => {
   });
 };
 
+const getTransfromSingleData = ({ item = {}, selection = [] }) => {
+
+  if (selection.length === 0) {
+    return item;
+  }
+
+  const result = {};
+
+  selection.forEach((selectItem) => {
+    result[selectItem] = item[selectItem];
+  });
+
+  return result;
+};
+
 module.exports = {
   transfromData,
+  getTransfromSingleData,
 };
