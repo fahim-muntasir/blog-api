@@ -105,8 +105,8 @@ paths:
           name: sortBy
           schema:
             type: string
-            enum: [updatedAt, name]
-            default: updatedAt
+            enum: [createdAt, updatedAt, name]
+            default: createdAt
       responses:
         "200":
           description: Successful operation
