@@ -9,9 +9,9 @@ info:
     url: fahim.com
     email: fahim@fahim.com
   version: 1.0.0
-  
+
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:4000/api/v1
     description: this is development server
 
 tags:
@@ -23,7 +23,6 @@ tags:
     description: Article endpoint (public + private)
   - name: Comment
     description: Comment endpoint (public + private)
-
 
 paths:
   /auth/signin:
@@ -46,9 +45,9 @@ paths:
                   type: string
                   example: 123
               required: [email, password]
-              
+
       responses:
-        '200':
+        "200":
           description: SignIn successfull
           content:
             application/json:
@@ -61,9 +60,9 @@ paths:
                   data:
                     type: object
                     properties:
-                      token: 
+                      token:
                         type: string
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
                   links:
                     type: object
                     properties:
@@ -71,12 +70,12 @@ paths:
                         type: string
                         format: url
                         example: /users/1
-        '400':
-          $ref: '#/components/responses/400'
-          
-        '500':
-          $ref: '#/components/responses/500'
-          
+        "400":
+          $ref: "#/components/responses/400"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /users:
     get:
       tags:
@@ -98,7 +97,7 @@ paths:
             default: 10
         - in: query
           name: sortType
-          schema: 
+          schema:
             type: string
             enum: [desc, asc]
             default: desc
@@ -109,7 +108,7 @@ paths:
             enum: [updatedAt, name]
             default: updatedAt
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
@@ -122,10 +121,10 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Users'
+                      $ref: "#/components/schemas/Users"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
-                  
+                    $ref: "#/components/schemas/Pagination"
+
                   links:
                     type: object
                     properties:
@@ -142,11 +141,11 @@ paths:
                         type: string
                         example: /api/v1/atricles
                     required: [self]
-        '404':
-          $ref: '#/components/responses/404'
-                  
-        '500':
-          $ref: '#/components/responses/500'
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
     post:
       security:
         - bearerAuth: []
@@ -170,12 +169,12 @@ paths:
                 password:
                   type: string
                   example: 123
-                role:
-                  type: string
-                  enum: [admin, user]
-      
+                # role:
+                #   type: string
+                #   enum: [admin, user]
+
       responses:
-        '201':
+        "201":
           description: User create successfully
           content:
             application/json:
@@ -186,7 +185,7 @@ paths:
                     type: integer
                     example: 201
                   data:
-                    $ref: '#/components/schemas/Users'
+                    $ref: "#/components/schemas/Users"
                   links:
                     type: object
                     properties:
@@ -194,13 +193,13 @@ paths:
                         type: string
                         format: url
                         example: /users/1
-        
-        '400':
-          $ref: '#/components/responses/400'
-          
-        '500':
-          $ref: '#/components/responses/500'
-          
+
+        "400":
+          $ref: "#/components/responses/400"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /users/:{id}:
     get:
       tags:
@@ -215,9 +214,9 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       responses:
-        '200':
+        "200":
           description: Successfull operation
           content:
             application/json:
@@ -228,20 +227,20 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Users'
+                    $ref: "#/components/schemas/Users"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         format: url
-                        example: '/users/1'
+                        example: "/users/1"
                 required: [code, data, links]
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       security:
         - bearerAuth: []
@@ -271,7 +270,7 @@ paths:
                   type: string
                   example: example@example.com
       responses:
-        '200':
+        "200":
           description: User updated successful
           content:
             application/json:
@@ -282,22 +281,22 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Users'
+                    $ref: "#/components/schemas/Users"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         example: /users/1
-          
-        '400':
-          $ref: '#/components/responses/400'
-          
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '500':
-          $ref: '#/components/responses/500'
+
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       security:
         - bearerAuth: []
@@ -314,7 +313,7 @@ paths:
             type: integer
             example: 1
       responses:
-        '200':
+        "200":
           description: deleted successfully
           content:
             application/json:
@@ -325,18 +324,18 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Users'
+                    $ref: "#/components/schemas/Users"
                 required: [code, data]
-                
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '404':
-          $ref: '#/components/responses/404'
-          
-        '500':
-          $ref: '#/components/responses/500'
-          
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /articles:
     get:
       tags:
@@ -372,9 +371,9 @@ paths:
           in: query
           schema:
             type: string
-            
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -387,9 +386,9 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Article'
+                      $ref: "#/components/schemas/Article"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
@@ -402,8 +401,8 @@ paths:
                       prevPage:
                         type: string
                         example: /articles?page=1
-        '500':
-          $ref: '#/components/responses/500'
+        "500":
+          $ref: "#/components/responses/500"
     post:
       security:
         - bearerAuth: []
@@ -424,10 +423,10 @@ paths:
                 body:
                   type: string
                   example: article body
-                userId: 
+                userId:
                   type: integer
                   example: 1
-                avatar: 
+                avatar:
                   type: string
                   example: https://avatar.com/avatar
                 status:
@@ -435,9 +434,9 @@ paths:
                   example: pending
                   default: pending
               required: [title, body, userId]
-              
+
       responses:
-        '201':
+        "201":
           description: Success response
           content:
             application/json:
@@ -448,26 +447,26 @@ paths:
                     type: integer
                     example: 201
                   data:
-                    $ref: '#/components/schemas/Article'
+                    $ref: "#/components/schemas/Article"
                   links:
                     type: object
                     properties:
-                      self: 
+                      self:
                         type: string
                         example: /articles/1
                       author:
                         type: string
                         example: /users/1
-                      comments: 
+                      comments:
                         type: string
                         example: /articles/1/comments
                     required: [self, author, comments]
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '500':
-          $ref: '#/components/responses/500'
-  
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /articles/:{id}:
     get:
       tags:
@@ -482,9 +481,9 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -495,7 +494,7 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Article'
+                    $ref: "#/components/schemas/Article"
                   links:
                     type: object
                     properties:
@@ -508,11 +507,11 @@ paths:
                       comments:
                         type: string
                         example: /articles/1/comments
-        '404':
-          $ref: '#/components/responses/404'
-          
-        '500':
-          $ref: '#/components/responses/500'
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       security:
         - bearerAuth: []
@@ -528,7 +527,7 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       requestBody:
         required: true
         content:
@@ -545,23 +544,23 @@ paths:
                 status:
                   type: string
                   example: pending
-                avatar: 
+                avatar:
                   type: string
                   example: http://avatar.com/avatar
-            
+
       responses:
-        '200':
+        "200":
           description: Success Response
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  code: 
+                  code:
                     type: integer
                     example: 200
                   body:
-                    $ref: '#/components/schemas/Article'
+                    $ref: "#/components/schemas/Article"
                   links:
                     type: object
                     properties:
@@ -571,14 +570,14 @@ paths:
                       author:
                         type: string
                         example: /users/1
-                      comments: 
+                      comments:
                         type: string
                         example: /articles/1/comments
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '500':
-          $ref: '#/components/responses/500'
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       security:
         - bearerAuth: []
@@ -593,9 +592,9 @@ paths:
           schema:
             type: integer
             example: 1
-      
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -606,17 +605,17 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Article'
-        
-        '401': 
-          $ref: '#/components/responses/401'
-          
-        '404': 
-          $ref: '#/components/responses/404'
-          
-        '500': 
-          $ref: '#/components/responses/500'
-          
+                    $ref: "#/components/schemas/Article"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /articles/:{id}/comments:
     get:
       tags:
@@ -630,9 +629,9 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -643,9 +642,9 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Comment'
+                    $ref: "#/components/schemas/Comment"
                   patination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
@@ -661,13 +660,13 @@ paths:
                       article:
                         type: string
                         example: /articles/1
-                        
-        '404':
-          $ref: '#/components/responses/404'
-          
-        '500':
-          $ref: '#/components/responses/500'
-  
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /comments:
     get:
       tags:
@@ -708,23 +707,23 @@ paths:
           schema:
             type: string
             example: fahim author
-            
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  code: 
+                  code:
                     type: integer
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Comment'
+                      $ref: "#/components/schemas/Comment"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
@@ -737,8 +736,8 @@ paths:
                       prevPage:
                         type: string
                         example: /comments?page=1
-        '500':
-          $ref: '#/components/responses/500'
+        "500":
+          $ref: "#/components/responses/500"
     post:
       security:
         - bearerAuth: []
@@ -765,9 +764,9 @@ paths:
                 status:
                   type: string
                   default: pending
-              required: [text,author,article]
+              required: [text, author, article]
       responses:
-        '201':
+        "201":
           description: Success response
           content:
             application/json:
@@ -778,7 +777,7 @@ paths:
                     type: integer
                     example: 201
                   data:
-                    $ref: '#/components/schemas/Comment'
+                    $ref: "#/components/schemas/Comment"
                   links:
                     type: object
                     properties:
@@ -791,13 +790,13 @@ paths:
                       article:
                         type: string
                         example: /articles/1
-                        
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '500':
-          $ref: '#/components/responses/500'
-          
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
+
   /comments/:{id}:
     get:
       tags:
@@ -812,9 +811,9 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -825,7 +824,7 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Comment'
+                    $ref: "#/components/schemas/Comment"
                   links:
                     type: object
                     properties:
@@ -838,12 +837,12 @@ paths:
                       article:
                         type: string
                         example: /articles/1
-        
-        '404':
-          $ref: '#/components/responses/404'
-          
-        '500':
-          $ref: '#/components/responses/500'
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
     patch:
       security:
         - bearerAuth: []
@@ -859,7 +858,7 @@ paths:
           schema:
             type: integer
             example: 1
-            
+
       requestBody:
         required: true
         content:
@@ -873,9 +872,9 @@ paths:
                 status:
                   type: string
                   example: pending
-      
+
       responses:
-        '200':
+        "200":
           description: success response
           content:
             application/json:
@@ -886,7 +885,7 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Comment'
+                    $ref: "#/components/schemas/Comment"
                   links:
                     type: object
                     properties:
@@ -899,12 +898,12 @@ paths:
                       article:
                         type: string
                         example: /articles/1
-                        
-        '401':
-          $ref: '#/components/responses/401'
-          
-        '500':
-          $ref: '#/components/responses/500'
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       security:
         - bearerAuth: []
@@ -921,7 +920,7 @@ paths:
             type: integer
             example: 1
       responses:
-        '200':
+        "200":
           description: Success response
           content:
             application/json:
@@ -932,23 +931,23 @@ paths:
                     type: integer
                     example: 200
                   data:
-                    $ref: '#/components/schemas/Comment'
-        '401': 
-          $ref: '#/components/responses/401'
-          
-        '404': 
-          $ref: '#/components/responses/404'
-          
-        '500': 
-          $ref: '#/components/responses/500'
-            
+                    $ref: "#/components/schemas/Comment"
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      
+
   schemas:
     Users:
       type: object
@@ -967,12 +966,12 @@ components:
           example: user
         updatedAt:
           type: string
-          example: '2023-01-15T12:30:00'
+          example: "2023-01-15T12:30:00"
         createdAt:
           type: string
-          example: '2023-01-15T12:30:00'
+          example: "2023-01-15T12:30:00"
       required: [id, name, email, role, updatedAt, createdAt]
-      
+
     Article:
       type: object
       properties:
@@ -1003,12 +1002,12 @@ components:
           required: [id, name, email]
         updatedAt:
           type: string
-          example: '2023-01-15T12:30:00'
-        createdAt: 
+          example: "2023-01-15T12:30:00"
+        createdAt:
           type: string
-          example: '2023-01-15T12:30:00'
+          example: "2023-01-15T12:30:00"
       required: [id, title, status, author, updatedAt, createdAt]
-      
+
     Pagination:
       type: object
       properties:
@@ -1031,7 +1030,7 @@ components:
           type: integer
           example: 100
       required: [page, limit, totalPage, totalItem]
-      
+
     Comment:
       type: object
       properties:
@@ -1058,13 +1057,13 @@ components:
               example: example@example.com
         updatedAt:
           type: string
-          example: '2023-01-15T12:30:00'
+          example: "2023-01-15T12:30:00"
         createdAt:
           type: string
-          example: '2023-01-15T12:30:00'
-      
+          example: "2023-01-15T12:30:00"
+
   responses:
-    '400':
+    "400":
       description: Bad request
       content:
         application/json:
@@ -1088,10 +1087,10 @@ components:
                     message:
                       type: string
                       example: Invalid email
-                    
+
             required: [code, error]
-    
-    '401':
+
+    "401":
       description: Unauthorized
       content:
         application/json:
@@ -1105,8 +1104,8 @@ components:
                 type: string
                 example: Unauthorized, please signin and try again
             required: [code, error]
-    
-    '404':
+
+    "404":
       description: Not found data
       content:
         application/json:
@@ -1120,8 +1119,8 @@ components:
                 type: string
                 example: Not found
             required: [code, error]
-            
-    '500':
+
+    "500":
       description: Internal server error
       content:
         application/json:
@@ -1135,27 +1134,3 @@ components:
                 type: string
                 example: Server error
             required: [code, error]
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-  

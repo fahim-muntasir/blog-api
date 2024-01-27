@@ -14,6 +14,14 @@ const userSchema = new Schema(
       trim: true,
       lowercase: true,
       match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
+      validate: {
+        validator: async function(value){
+          const user = await User.findOne({email: value});
+
+          return !user;
+        },
+        message: "Email is already in use."
+      }
     },
     password: {
       type: String,

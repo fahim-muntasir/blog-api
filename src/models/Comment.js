@@ -13,7 +13,7 @@ const commentSchema = new Schema(
       required: [true, "Article Id is required"],
     },
     text: {
-      tyep: String,
+      type: String,
       required: [true, "Comment text is required"],
     },
     status: {
