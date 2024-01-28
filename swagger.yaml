@@ -310,7 +310,7 @@ paths:
           description: User Id
           required: true
           schema:
-            type: integer
+            type: string
             example: 1
       responses:
         "200":
