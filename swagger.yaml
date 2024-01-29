@@ -367,6 +367,12 @@ paths:
             type: string
             enum: [updatedAt, title]
             default: updatedAt
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, pending, draft]
+            default: pending
         - name: search
           in: query
           schema:
@@ -423,17 +429,7 @@ paths:
                 body:
                   type: string
                   example: article body
-                userId:
-                  type: integer
-                  example: 1
-                avatar:
-                  type: string
-                  example: https://avatar.com/avatar
-                status:
-                  type: string
-                  example: pending
-                  default: pending
-              required: [title, body, userId]
+              required: [title, body]
 
       responses:
         "201":
@@ -467,7 +463,7 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  /articles/:{id}:
+  /articles/{id}:
     get:
       tags:
         - Article
@@ -479,8 +475,7 @@ paths:
           description: Article id
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
 
       responses:
         "200":
@@ -525,8 +520,7 @@ paths:
           description: Article id
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
 
       requestBody:
         required: true
@@ -541,12 +535,6 @@ paths:
                 body:
                   type: string
                   example: article body
-                status:
-                  type: string
-                  example: pending
-                avatar:
-                  type: string
-                  example: http://avatar.com/avatar
 
       responses:
         "200":
@@ -590,8 +578,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
 
       responses:
         "200":
@@ -616,7 +603,7 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  /articles/:{id}/comments:
+  /articles/{id}/comments:
     get:
       tags:
         - Article
@@ -627,8 +614,41 @@ paths:
           in: path
           required: true
           schema:
+            type: string
+        - name: page
+          in: query
+          schema:
             type: integer
-            example: 1
+            example: 2
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+            default: 10
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [createdAt, text, updatedAt]
+            default: createdAt
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, pending, draft]
+            default: pending
+        - name: search
+          in: query
+          schema:
+            type: string
 
       responses:
         "200":
@@ -755,16 +775,10 @@ paths:
                 text:
                   type: string
                   example: awesome article
-                author:
-                  type: integer
-                  example: 1
                 article:
                   type: integer
                   example: 1
-                status:
-                  type: string
-                  default: pending
-              required: [text, author, article]
+              required: [text, article]
       responses:
         "201":
           description: Success response
@@ -797,7 +811,7 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  /comments/:{id}:
+  /comments/{id}:
     get:
       tags:
         - Comment
@@ -809,8 +823,7 @@ paths:
           description: Comment Id
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
 
       responses:
         "200":
@@ -856,8 +869,7 @@ paths:
           description: Comment id
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
 
       requestBody:
         required: true
@@ -866,12 +878,9 @@ paths:
             schema:
               type: object
               properties:
-                test:
+                text:
                   type: string
                   example: comment text
-                status:
-                  type: string
-                  example: pending
 
       responses:
         "200":
@@ -917,8 +926,7 @@ paths:
           description: Comment Id
           required: true
           schema:
-            type: integer
-            example: 1
+            type: string
       responses:
         "200":
           description: Success response

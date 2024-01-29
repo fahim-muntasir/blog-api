@@ -9,7 +9,7 @@ const globalError = (error, _req, res, _next) => {
   // mongoose validation error response
   if (error.name === "ValidationError") {
     const validationErrors = Object.entries(error.errors).map(
-      ([key, value]) => ({ field: key, message: value.properties.message })
+      ([key, value]) => ({ field: key, message: value.properties?.message })
     );
 
     return res.status(400).json({

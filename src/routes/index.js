@@ -4,6 +4,9 @@ const articleController = require("../api/v1/article");
 const commentController = require("../api/v1/comment");
 const authController = require("../api/v1/auth");
 
+// middleware imports
+const authMiddleware = require("../middleware/auth");
+
 // api health route
 router.get("/health", (_req, res) => {
   res.status(200).json({
@@ -28,7 +31,7 @@ router
 router
   .route("/v1/articles")
   .get(articleController.findAllItems)
-  .post(articleController.create);
+  .post(authMiddleware, articleController.create);
 
 router
   .route("/v1/articles/:id")
@@ -41,13 +44,17 @@ router
 router
   .route("/v1/comments")
   .get(commentController.findAllItems)
-  .post(commentController.create);
+  .post(authMiddleware, commentController.create);
 
 router
   .route("/v1/comments/:id")
   .get(commentController.findSingleItem)
   .patch(commentController.updateItem)
   .delete(commentController.deleteItem);
+
+router
+  .route("/v1/articles/:id/comments")
+  .get(commentController.findItemsByArticleId);
 // ======== api/v1 comments route end ========
 
 // ======== api/v1 auth route start ========

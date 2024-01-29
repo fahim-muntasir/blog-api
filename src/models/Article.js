@@ -5,7 +5,7 @@ const articleSchema = new Schema(
     authors: {
       type: Types.ObjectId,
       ref: "User",
-      required: [true, "Author Id is required"],
+      required: true,
     },
     title: {
       type: String,
@@ -16,10 +16,7 @@ const articleSchema = new Schema(
       type: String,
       required: [true, "Body is required"],
     },
-    avatar: {
-      type: String,
-      required: [true, "Avatar is required"],
-    },
+    avatar: String,
     status: {
       type: String,
       enum: {

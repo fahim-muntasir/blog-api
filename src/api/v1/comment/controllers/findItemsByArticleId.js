@@ -6,6 +6,8 @@ const {
 const { transfromData } = require("../../../../utils/responseData");
 
 const findAllItems = async (req, res, next) => {
+  const { id } = req.params;
+
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
   const sortType = req.query.sortType || "desc";
@@ -14,7 +16,8 @@ const findAllItems = async (req, res, next) => {
   const status = req.query.status || "";
 
   try {
-    const { data, totalItems } = await commentServices.findAllItems({
+    const { data, totalItems } = await commentServices.findItemsByArticleId({
+      id,
       page,
       limit,
       sortType,

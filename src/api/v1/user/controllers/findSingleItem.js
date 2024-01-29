@@ -16,7 +16,6 @@ const findSingleItem = async (req, res, next) => {
 
     const response = {
       code: 200,
-      id,
       data,
       links: {
         self: req.originalUrl
