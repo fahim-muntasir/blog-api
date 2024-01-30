@@ -58,7 +58,7 @@ router
 // ======== api/v1 comments route end ========
 
 // ======== api/v1 auth route start ========
-router.route("/v1/signin").post(authController.signin);
+router.route("/v1/auth/signin").post(authController.signin);
 // ======== api/v1 auth route end ========
 
 module.exports = router;

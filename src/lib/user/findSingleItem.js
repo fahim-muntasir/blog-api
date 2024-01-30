@@ -10,4 +10,18 @@ const findSingleItem = async (id) => {
   }
 };
 
-module.exports = findSingleItem;
+const existUser = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      return user;
+    }
+
+    return false;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { findSingleItem, existUser };
