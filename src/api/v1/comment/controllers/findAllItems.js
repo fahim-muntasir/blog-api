@@ -66,7 +66,6 @@ const findAllItems = async (req, res, next) => {
     // send final response
     res.status(200).json(response);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

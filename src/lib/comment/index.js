@@ -4,6 +4,7 @@ const findSingleItem = require("./findSingleItem");
 const updateItem = require("./updateItem");
 const deleteItem = require("./deleteItem");
 const findItemsByArticleId = require("./findItemsByArticleId");
+const checkOwnerShip = require("./checkOwnership");
 
 module.exports = {
   create,
@@ -12,4 +13,5 @@ module.exports = {
   updateItem,
   deleteItem,
   findItemsByArticleId,
+  checkOwnerShip
 };

@@ -14,7 +14,7 @@ const create = async (req, res, next) => {
     const createdComment = await commentServices.create({
       text,
       article,
-      authors: req.user._id,
+      authors: req.user.id,
     });
 
     // generate the atuale data for the response
@@ -47,7 +47,6 @@ const create = async (req, res, next) => {
     // send final response
     res.status(201).json(response);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

@@ -1,4 +1,4 @@
-const { generateBadRequestError } = require("../../../../utils/error");
+const { generateBadRequestError, authenticateError } = require("../../../../utils/error");
 const userServices = require("../../../../lib/user");
 const { tokenGenerator } = require("../../../../lib/auth");
 const { getTransfromSingleData } = require("../../../../utils/responseData");
@@ -16,17 +16,11 @@ const signin = async (req, res, next) => {
     const isExistUser = await userServices.existUser(email);
 
     if (!isExistUser) {
-      const error = new Error("Unauthorized");
-      error.status = 401;
-      
-      throw error;
+      throw authenticateError("Invalid credentials!");
     }
 
     if (isExistUser.password !== password) {
-      const error = new Error("Unauthorized");
-      error.status = 401;
-      
-      throw error;
+      throw authenticateError("Invalid credentials!");
     }
 
     const payload = getTransfromSingleData({

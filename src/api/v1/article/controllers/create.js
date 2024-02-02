@@ -16,7 +16,7 @@ const create = async (req, res, next) => {
       title,
       body,
       avatar,
-      authors: req.user._id,
+      authors: req.user.id,
     });
 
     // generate the atuale data for the response

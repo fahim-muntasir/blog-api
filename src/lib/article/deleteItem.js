@@ -1,4 +1,5 @@
 const { Article } = require("../../models");
+const { notFoundError } = require("../../utils/error");
 
 const deleteItem = async (id) => {
   try {
@@ -8,10 +9,7 @@ const deleteItem = async (id) => {
     );
 
     if (!deletedItem) {
-      const error = new Error("Resources not found!");
-      error.status = 404;
-
-      throw error;
+      throw notFoundError("Article not found!");
     }
 
     return deletedItem;

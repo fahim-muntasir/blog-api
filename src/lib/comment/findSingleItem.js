@@ -1,4 +1,5 @@
 const { Comment } = require("../../models");
+const { notFoundError } = require("../../utils/error");
 
 const findSingleItem = async (id) => {
   try {
@@ -7,10 +8,7 @@ const findSingleItem = async (id) => {
       .populate("article", "title");
 
     if (!comment) {
-      const error = new Error("Resources not found!");
-      error.status = 404;
-
-      throw error;
+      throw notFoundError("Comment not found!");
     }
 
     return comment;

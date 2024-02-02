@@ -1,4 +1,5 @@
 const { Article } = require("../../models");
+const { notFoundError } = require("../../utils/error");
 
 const findSingleItem = async (id) => {
   try {
@@ -8,10 +9,7 @@ const findSingleItem = async (id) => {
     );
 
     if (!article) {
-      const error = new Error("Resources not found!");
-      error.status = 404;
-
-      throw error;
+      throw notFoundError("Article not found!");
     }
     
     return article;
